@@ -13,32 +13,40 @@ toggleBtn.addEventListener("click", () => {
 
 btn.addEventListener("click", (e) => {
     e.preventDefault();
-    if (!nameInp.value || !emailInp.value || !passInp.value) {
+    
+    const nameValue = nameInp.value.trim();
+    const passValue = passInp.value.trim();
+    const emailValue = emailInp.value.trim();
+
+    if (!nameValue || !emailValue || !passValue) {
         alert("Iltimos, barcha maydonlarni to'ldiring!");
         return;
     }
 
+    if (nameValue === "Muhammadiyor" && passValue === "20021202") {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("role", "admin");
+        alert("Xush kelibsiz, Admin!");
+        window.location.href = "admin.html";
+        return; 
+    }
+
     const newUser = {
-        firstName: nameInp.value,
-        email: emailInp.value,
-        password: passInp.value
+        firstName: nameValue,
+        email: emailValue,
+        password: passValue
     };
 
     fetch('https://dummyjson.com/users/add', {
         method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newUser)
     })
     .then(res => res.json())
     .then(data => {
-        console.log(data);
-        
         localStorage.setItem("isLoggedIn", "true");
-        
+        localStorage.setItem("role", "user");
         alert("Muvaffaqiyatli ro'yxatdan o'tdingiz!");
-
         window.location.href = "index.html"; 
     })
     .catch(err => {
